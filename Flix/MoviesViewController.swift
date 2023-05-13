@@ -16,6 +16,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.rowHeight = 180
@@ -65,6 +67,21 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         cell.posterView.af.setImage(withURL: posterUrl!)
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let vc = storyboard?.instantiateViewController(withIdentifier: "Movie") as? MovieViewController {
+            let movie = movies[indexPath.row]
+            let baseUrl = "https://image.tmdb.org/t/p/w185" as! String
+            let posterPath = movie["poster_path"] as! String
+            
+            
+            vc.movieTitle = movie["title"] as! String
+            vc.movieSynopsis = movie["overview"] as! String
+            vc.moviePosterUrl = URL(string: baseUrl + posterPath)
+            
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
 }
